@@ -6,6 +6,7 @@ to watch next.'''
 
 import sys
 import numpy as N
+import random
 
 inputText = "Please input a file name," \
 			+ " or enter nothing to quit: "
@@ -65,10 +66,45 @@ def convertFileLines(linesArray):
 			print "Right now, putting commas in names is a really bad idea."
 	return N.array(taskList)
 
-def findSwapProbability(i,j,taskList):
-	'''Returns the (non-normalised) probability of swapping tasks i and j in the given list'''
-	deltaE = gravity*(i-j)*(taskList[i].weight - taskList[j].weight)
+def findSwapProbability(i,j,taskArray):
+	'''Returns the (non-normalised) probability of swapping tasks i and j in given list'''
+	deltaE = gravity*(i-j)*(taskArray[i].weight - taskArray[j].weight)
 	return N.exp(-1*deltaE/temp)
+
+def thermalShuffle(taskArray):
+	'''Shuffle the tasks according to thermal-motion based laws. I think a good analogy
+	would be a gas of particles of mixed masses at relatively low temperature, in a 
+	fairly vertical container.'''	
+	# Loop over the tasks:
+	length = len(taskArray))
+	for i in range (0, length):
+		task = taskArray[i]
+		# Create an array of swap probabilities for i by replacing j with an array of every possible j
+		rawDistribution = findSwapProbabilities(i, N.arange(0, length, taskArray)
+		# Normalise the probabilities
+		probabilityDist = rawDistribution/N.sum(rawDistribution)
+		
+		# Choose which position i will swap to by musical chairs algorithm
+		# Swapping to its own position is legitimate (and will be the most probable swap 
+		# if the array is ordered)
+		randomVal = random.random()
+		for k in range (i, length + i):
+			if randomVal <= 0:
+				taskArray = swap(i, k % length, taskArray)
+				return
+			else:
+				randomVal -= probabilityDist[k % length]
+
+
+def taskSwap(i, j, taskArray):
+	'''Swaps tasks i and j in the array'''
+	#don't feel like avoiding using a temporary variable
+	#lazy
+	temp = taskArray[i]
+	taskArray[i] = taskArray[j]
+	taskArray[j] = temp
+	return taskArray
+				
 
 if __name__ == "__main__":
 	print "Starting..."
