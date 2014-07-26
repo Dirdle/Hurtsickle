@@ -95,12 +95,12 @@ def thermalShuffle(taskArray):
 		# Swapping to its own position is legitimate (and will be the most probable swap 
 		# if the array is ordered)
 		randomVal = random.random()
-		for k in range (i, length + i):
+		for k in range (0, length):
 			if randomVal <= 0:
-				taskArray = taskSwap(i, k % length, taskArray)
+				taskArray = taskSwap(i, k, taskArray)
 				pass
 			else:
-				randomVal -= probabilityDist[k % length]
+				randomVal -= probabilityDist[k]
 	return taskArray
 
 

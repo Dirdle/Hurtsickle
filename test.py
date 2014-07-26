@@ -20,27 +20,30 @@ def tasklistToTaskweights(tasklist):
 if __name__ == "__main__":
 	import animeChoose as choose
 	
-	testList = choose.convertFileLines(choose.openExisting("testCase.txt"))
+	testListBase = choose.convertFileLines(choose.openExisting("testCase.txt"))
 	
-	n = 10000
+	n = 1500
 
 	# Alright, what's needed?
 	# 1) create a large number of shuffles of the test case list
 	# 2) create a hexbin plot with weight on x and position on y
 	
-	choose.temp = 1
-	choose.gravity = 1
+	choose.temp = 500
+	choose.gravity = 0
 	choose.increment = 1
 	x = []
 	y = []
 	for i in range (0, n):
+		testList = testListBase.copy()
+		
 		x.extend((tasklistToTasknames(testList)))
 		testList = choose.thermalShuffle(testList)
 		y.extend(tasklistToTasknames(testList))
 
-	plot.hexbin(x,y,gridsize=20)
+	plot.hexbin(x,y,gridsize=10)
 	#plot.axis([xmin, xmax, ymin, ymax])
 	cb = plot.colorbar()
 	cb.set_label('log10(N)')
-
+	plot.xlabel("Weight")
+	plot.ylabel("Resultant position")
 	plot.show()
