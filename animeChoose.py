@@ -10,8 +10,10 @@ import random
 
 inputText = "Please input a file name," \
 			+ " or enter nothing to quit: "
-gravity	= 10
-temp	= 50
+
+gravity   = 10
+temp	  = 10
+increment = 1
 
 
 class Task:
@@ -66,9 +68,9 @@ def convertFileLines(linesArray):
 			print "Right now, putting commas in names is a really bad idea."
 	return N.array(taskList)
 
-def findSwapProbability(i,j,taskArray):
+def findSwapProbability(i,j,m_i, m_j):
 	'''Returns the (non-normalised) probability of swapping tasks i and j in given list'''
-	deltaE = gravity*(i-j)*(taskArray[i].weight - taskArray[j].weight)
+	deltaE = gravity*(i-j)*(m_i - m_j)
 	return N.exp(-1*deltaE/temp)
 
 def thermalShuffle(taskArray):
@@ -76,11 +78,16 @@ def thermalShuffle(taskArray):
 	would be a gas of particles of mixed masses at relatively low temperature, in a 
 	fairly vertical container.'''	
 	# Loop over the tasks:
-	length = len(taskArray))
+	length  = len(taskArray)
+	weights = N.arange(0, length)
+	# Create an array of the weights. I'm tired of trying to be clever about this.
+	for a in weights:
+		a = taskArray[a].weight
+
 	for i in range (0, length):
-		task = taskArray[i]
 		# Create an array of swap probabilities for i by replacing j with an array of every possible j
-		rawDistribution = findSwapProbabilities(i, N.arange(0, length, taskArray)
+		
+		rawDistribution = findSwapProbability(i, N.arange(0, length), weights[i], weights)
 		# Normalise the probabilities
 		probabilityDist = rawDistribution/N.sum(rawDistribution)
 		
@@ -90,10 +97,11 @@ def thermalShuffle(taskArray):
 		randomVal = random.random()
 		for k in range (i, length + i):
 			if randomVal <= 0:
-				taskArray = swap(i, k % length, taskArray)
-				return
+				taskArray = taskSwap(i, k % length, taskArray)
+				pass
 			else:
 				randomVal -= probabilityDist[k % length]
+	return taskArray
 
 
 def taskSwap(i, j, taskArray):
@@ -104,7 +112,20 @@ def taskSwap(i, j, taskArray):
 	taskArray[i] = taskArray[j]
 	taskArray[j] = temp
 	return taskArray
-				
+
+def getUserChoice(shuffledTasks):
+	'''Permits the user to choose their favourite of the top three; 
+	the other two have their weight increased'''
+	choice = input( "Please select the task you'll perform: " + '\n' +
+	"1. " + repr(shuffledTasks[0])  + '\n' +
+	"2. " + repr(shuffledTasks[1])  + '\n' +
+	"3. " + repr(shuffledTasks[2]))
+	taskSwap(0, choice - 1)
+	print "You have selected " + repr(shuffledTasks[0])
+	shuffledTasks[1].weight += 1
+	shuffledTasks[2].weight += 1
+	return shuffledTasks[1:]
+
 
 if __name__ == "__main__":
 	print "Starting..."
@@ -113,11 +134,7 @@ if __name__ == "__main__":
 	if len(sys.argv) == 2:
 		fileLines = openExisting(sys.argv[1])
 		tasks     = convertFileLines(fileLines)
-		# Next:
-		# For each task, generate a list of the probabilities of it swapping
-		# to each position including its current one
-		# Normalise that list
-		# Decide on an outcome and execute that swap
+		shuffled  = thermalShuffle(tasks)
+		tasks = getUserChoice(shuffled)
 	else:
 		requestNewFileName()
-	#TODO application logic
