@@ -90,18 +90,18 @@ def thermalShuffle(taskArray):
 		rawDistribution = findSwapProbability(i, N.arange(0, length), weights[i], weights)
 		# Normalise the probabilities
 		probabilityDist = rawDistribution/N.sum(rawDistribution)
-		
 		# Choose which position i will swap to by musical chairs algorithm
 		# Swapping to its own position is legitimate (and will be the most probable swap 
 		# if the array is ordered)
 		randomVal = random.random()
-		for k in range (0, length):
-			if randomVal <= 0:
-				taskArray = taskSwap(i, k, taskArray)
-				pass
-			else:
-				randomVal -= probabilityDist[k]
-	return taskArray
+		k = i
+		while randomVal > 0:
+			randomVal -= probabilityDist[k]
+			k += 1
+			k = k % length
+		taskArray = taskSwap(i, k, taskArray)	
+		
+	return taskArray 
 
 
 def taskSwap(i, j, taskArray):

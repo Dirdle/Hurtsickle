@@ -22,14 +22,14 @@ if __name__ == "__main__":
 	
 	testListBase = choose.convertFileLines(choose.openExisting("testCase.txt"))
 	
-	n = 1500
+	n = 2000
 
 	# Alright, what's needed?
 	# 1) create a large number of shuffles of the test case list
 	# 2) create a hexbin plot with weight on x and position on y
 	
-	choose.temp = 500
-	choose.gravity = 0
+	choose.temp = 10
+	choose.gravity = 5
 	choose.increment = 1
 	x = []
 	y = []
@@ -40,10 +40,9 @@ if __name__ == "__main__":
 		testList = choose.thermalShuffle(testList)
 		y.extend(tasklistToTasknames(testList))
 
-	plot.hexbin(x,y,gridsize=10)
+	plot.hexbin(x,y,gridsize=10,bins='log')
 	#plot.axis([xmin, xmax, ymin, ymax])
 	cb = plot.colorbar()
-	cb.set_label('log10(N)')
 	plot.xlabel("Weight")
 	plot.ylabel("Resultant position")
 	plot.show()
