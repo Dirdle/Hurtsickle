@@ -76,6 +76,19 @@ def findSwapProbability(i,j,m_i, m_j):
 	deltaE = gravity*(i-j)*(m_i - m_j)
 	return N.exp(-1*deltaE/temp)
 
+
+### Code from http://stackoverflow.com/questions/3679694/a-weighted-version-of-random-choice
+### As given by Ned Batchelder
+def weighted_choice(choices):
+   total = sum(w for c, w in choices)
+   r = random.uniform(0, total)
+   upto = 0
+   for c, w in choices:
+      if upto + w > r:
+         return c
+      upto += w
+   assert False, "Shouldn't get here"
+
 def thermalShuffle(taskArray):
 	'''Shuffle the tasks according to thermal-motion based laws. I think a good analogy
 	would be a gas of particles of mixed masses at relatively low temperature, in a 
@@ -85,7 +98,7 @@ def thermalShuffle(taskArray):
 	weights = N.arange(0, length)
 	# Create an array of the weights. I'm tired of trying to be clever about this.
 	for a in weights:
-		a = taskArray[a].weight
+		a = int(taskArray[a].weight)
 
 	for i in range (0, length):
 		# Create an array of swap probabilities for i by replacing j with an array of every possible j
@@ -97,15 +110,12 @@ def thermalShuffle(taskArray):
 		# Swapping to its own position is legitimate (and will be the most probable swap 
 		# if the array is ordered)
 		randomVal = random.random()
-		k = i
-		while randomVal > 0:
+		k = 0
+		while ((randomVal - probabilityDist[k]) > 0):
 			randomVal -= probabilityDist[k]
-			k += 1
-			k = k % length
-		taskArray = taskSwap(i, k, taskArray)	
-		
-	return taskArray 
-
+			k = (k+1) % (length)
+		taskArray = taskSwap(i, k, taskArray)		
+	return taskArray
 
 def taskSwap(i, j, taskArray):
 	'''Swaps tasks i and j in the array'''
