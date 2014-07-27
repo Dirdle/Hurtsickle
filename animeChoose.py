@@ -11,9 +11,9 @@ import random
 inputText = "Please input a file name," \
 			+ " or enter nothing to quit: "
 
-gravity   = 10
-temp	  = 10
-increment = 1
+gravity   = 5
+temp	  = 25
+increment = 2
 
 
 class Task:
@@ -135,8 +135,8 @@ def getUserChoice(shuffledTasks):
 	"3. " + repr(shuffledTasks[2]))
 	taskSwap(0, choice - 1, shuffledTasks)
 	print "You have selected " + repr(shuffledTasks[0])
-	shuffledTasks[1].weight += 1
-	shuffledTasks[2].weight += 1
+	shuffledTasks[1].weight += increment
+	shuffledTasks[2].weight += increment
 	return shuffledTasks[1:]
 
 def writeOutputToFile(outputTasks, filePath):
