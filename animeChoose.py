@@ -58,7 +58,10 @@ def convertFileLines(linesArray):
 	all tasks equal weight.'''
 	taskList = []
 	for line in linesArray:
-		splitLine = line.split(",")
+		# remove all newline characters from the line first, then split around "," 
+		# the split does nothing if there is no comma
+		# if your favourite animu has a comma in the name, that's your problem		
+		splitLine = line.rstrip().split(",")
 		if len(splitLine) == 1 :
 			# Task automatically sets weight to 1
 			taskList.append(Task(splitLine[0]))
@@ -120,11 +123,23 @@ def getUserChoice(shuffledTasks):
 	"1. " + repr(shuffledTasks[0])  + '\n' +
 	"2. " + repr(shuffledTasks[1])  + '\n' +
 	"3. " + repr(shuffledTasks[2]))
-	taskSwap(0, choice - 1)
+	taskSwap(0, choice - 1, shuffledTasks)
 	print "You have selected " + repr(shuffledTasks[0])
 	shuffledTasks[1].weight += 1
 	shuffledTasks[2].weight += 1
 	return shuffledTasks[1:]
+
+def writeOutputToFile(outputTasks, filePath):
+	'''Write the tasklist back to the file, deleting any current contents of said file'''
+	with open(filePath, 'r+') as listFile:
+		outputText = ""
+		for task in outputTasks:
+			taskline = str(task)
+			outputText += taskline
+			outputText += '\n'
+		listFile.write(outputText)
+		listFile.truncate()
+	pass	
 
 
 if __name__ == "__main__":
@@ -136,5 +151,6 @@ if __name__ == "__main__":
 		tasks     = convertFileLines(fileLines)
 		shuffled  = thermalShuffle(tasks)
 		tasks = getUserChoice(shuffled)
+		writeOutputToFile(tasks, sys.argv[1])
 	else:
 		requestNewFileName()
