@@ -135,8 +135,8 @@ def getUserChoice(shuffledTasks):
 	"3. " + repr(shuffledTasks[2]))
 	taskSwap(0, choice - 1, shuffledTasks)
 	print "You have selected " + repr(shuffledTasks[0])
-	shuffledTasks[1].weight += increment
-	shuffledTasks[2].weight += increment
+	shuffledTasks[1].weight = int(shuffledTasks[1].weight) + increment
+	shuffledTasks[2].weight = int(shuffledTasks[2].weight) + increment
 	return shuffledTasks[1:]
 
 def writeOutputToFile(outputTasks, filePath):
