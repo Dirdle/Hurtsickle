@@ -11,9 +11,9 @@ import random
 inputText = "Please input a file name," \
 			+ " or enter nothing to quit: "
 
-gravity   = 5
+gravity   = 4
 temp	  = 25
-increment = 2
+increment = 0.3
 
 
 class Task:
@@ -73,12 +73,15 @@ def convertFileLines(linesArray):
 
 def findSwapProbability(i,j,m_i, m_j):
 	'''Returns the (non-normalised) probability of swapping tasks i and j in given list'''
-	deltaE = gravity*(i-j)*(m_i - m_j)
+	E_1 = (i*m_i) + (j*m_j)
+	E_2 = (i*m_j) + (j*m_i)
+	deltaE = gravity*(E_1 - E_2)
 	return N.exp(-1*deltaE/temp)
 
 
 ### Code from http://stackoverflow.com/questions/3679694/a-weighted-version-of-random-choice
 ### As given by Ned Batchelder
+### (Unused)
 def weighted_choice(choices):
    total = sum(w for c, w in choices)
    r = random.uniform(0, total)
@@ -89,17 +92,17 @@ def weighted_choice(choices):
       upto += w
    assert False, "Shouldn't get here"
 
+
 def thermalShuffle(taskArray):
 	'''Shuffle the tasks according to thermal-motion based laws. I think a good analogy
 	would be a gas of particles of mixed masses at relatively low temperature, in a 
 	fairly vertical container.'''	
 	# Loop over the tasks:
 	length  = len(taskArray)
-	weights = N.arange(0, length)
+	weights = numpy.arange(0, length)
 	# Create an array of the weights. I'm tired of trying to be clever about this.
-	for a in weights:
-		a = int(taskArray[a].weight)
-
+	for a in range (0, len(weights)):
+		weights[a] = int(testListBase[a].weight)
 	for i in range (0, length):
 		# Create an array of swap probabilities for i by replacing j with an array of every possible j
 		
