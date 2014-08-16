@@ -49,7 +49,7 @@ def singleHeavyweight():
 	weights = numpy.arange(0, length)
 	# Create an array of the weights. I'm tired of trying to be clever about this.
 	for a in range (0, len(weights)):
-		weights[a] = int(testListBase[a].weight)
+		weights[a] = float(testListBase[a].weight)
 	distributions = []
 	for i in range (0,length):
 		# Create an array of swap probabilities for i by replacing j with an array of every possible j
@@ -58,7 +58,6 @@ def singleHeavyweight():
 		# Normalise the probabilities
 		probabilityDist = rawDistribution/numpy.sum(rawDistribution)
 		distributions.append(probabilityDist)
-	print distributions
 	x = tasklistToTasknames(testListBase)
 	#l = 1
 	#for curve in distributions:			
@@ -66,6 +65,7 @@ def singleHeavyweight():
 	#	l = l + 1
 
 	y_1 = distributions[0]
+	print y_1
 	y_2 = distributions[1]
 	y_3 = distributions[2]
 	plot.plot(x, y_1, label="1")

@@ -13,11 +13,11 @@ inputText = "Please input a file name," \
 
 gravity   = 4
 temp	  = 25
-increment = 0.3
+increment = 0.6
 
 
 class Task:
-	def __init__(self, name, weight = 1):
+	def __init__(self, name, weight = 10):
 		self.name = name
 		self.weight = weight
 		pass
@@ -102,7 +102,7 @@ def thermalShuffle(taskArray):
 	weights = numpy.arange(0, length)
 	# Create an array of the weights. I'm tired of trying to be clever about this.
 	for a in range (0, len(weights)):
-		weights[a] = int(testListBase[a].weight)
+		weights[a] = float(testListBase[a].weight)
 	for i in range (0, length):
 		# Create an array of swap probabilities for i by replacing j with an array of every possible j
 		
@@ -138,8 +138,8 @@ def getUserChoice(shuffledTasks):
 	"3. " + repr(shuffledTasks[2]))
 	taskSwap(0, choice - 1, shuffledTasks)
 	print "You have selected " + repr(shuffledTasks[0])
-	shuffledTasks[1].weight = int(shuffledTasks[1].weight) + increment
-	shuffledTasks[2].weight = int(shuffledTasks[2].weight) + increment
+	shuffledTasks[1].weight = float(shuffledTasks[1].weight) + increment
+	shuffledTasks[2].weight = float(shuffledTasks[2].weight) + increment
 	return shuffledTasks[1:]
 
 def writeOutputToFile(outputTasks, filePath):
