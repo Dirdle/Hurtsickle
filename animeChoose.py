@@ -17,7 +17,7 @@ increment = 0.6
 
 
 class Task:
-	def __init__(self, name, weight = 10):
+	def __init__(self, name, weight = 4):
 		self.name = name
 		self.weight = weight
 		pass
@@ -99,10 +99,10 @@ def thermalShuffle(taskArray):
 	fairly vertical container.'''	
 	# Loop over the tasks:
 	length  = len(taskArray)
-	weights = numpy.arange(0, length)
+	weights = N.arange(0, length)
 	# Create an array of the weights. I'm tired of trying to be clever about this.
 	for a in range (0, len(weights)):
-		weights[a] = float(testListBase[a].weight)
+		weights[a] = float(taskArray[a].weight)
 	for i in range (0, length):
 		# Create an array of swap probabilities for i by replacing j with an array of every possible j
 		
