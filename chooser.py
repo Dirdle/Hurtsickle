@@ -146,15 +146,19 @@ def taskSwap(i, j, taskArray):
 def getUserChoice(shuffledTasks):
     '''Permits the user to choose their favourite of the top three; 
     the other two have their weight increased'''
-    choice = input( "Please select the task you'll perform: " + '\n' +
+    choice = raw_input( "Please select the task you'll perform,\
+    or enter nothing to exit: " + '\n' +
     "1. " + repr(shuffledTasks[0])  + '\n' +
     "2. " + repr(shuffledTasks[1])  + '\n' +
     "3. " + repr(shuffledTasks[2]) + '\n')
-    taskSwap(0, choice - 1, shuffledTasks)
-    print "You have selected " + repr(shuffledTasks[0])
-    shuffledTasks[1].weight = float(shuffledTasks[1].weight) + increment
-    shuffledTasks[2].weight = float(shuffledTasks[2].weight) + increment
-    return shuffledTasks[1:]
+    if choice in ['1','2','3']:
+        taskSwap(0, int(choice) - 1, shuffledTasks)
+        print "You have selected " + repr(shuffledTasks[0])
+        shuffledTasks[1].weight = float(shuffledTasks[1].weight) + increment
+        shuffledTasks[2].weight = float(shuffledTasks[2].weight) + increment
+        return shuffledTasks[1:]
+    else:
+        return None
 
 def writeOutputToFile(outputTasks, filePath):
     '''Write the tasklist back to the file, deleting any current contents of 
@@ -187,7 +191,9 @@ if __name__ == "__main__":
         fileLines = openExisting(args.file)
     else:
         fileLines = requestNewFileName()
-    tasks     = convertFileLines(fileLines)
-    shuffled  = thermalShuffle(tasks)
-    tasks = getUserChoice(shuffled)
-    writeOutputToFile(tasks, args.file)
+    if fileLines != None:
+        tasks     = convertFileLines(fileLines)
+        shuffled  = thermalShuffle(tasks)
+        tasks = getUserChoice(shuffled)
+        if tasks != None:
+            writeOutputToFile(tasks, args.file)
